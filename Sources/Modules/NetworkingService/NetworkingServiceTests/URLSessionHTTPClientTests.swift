@@ -23,6 +23,15 @@ class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.stopInterceptingRequests()
     }
     
+    func test_getFromURL_succeedsOnHTTPURLResponseWithData() {
+        let data = anyData()
+        let response = anyHTTPURLResponse()
+        let receivedValues = resultValueFor(data: data, response: response, error: nil)
+        XCTAssertEqual(data, receivedValues?.data)
+        XCTAssertEqual(response.url, receivedValues?.response.response?.url)
+        XCTAssertEqual(response.statusCode, receivedValues?.response.statusCode)
+    }
+    
     
     
     // MARK: - Helpers

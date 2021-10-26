@@ -81,7 +81,7 @@ public struct HTTPClientEntity {
 }
 
 public struct HTTPClientResponse {
-    var response: URLResponse?
+    public var response: URLResponse?
     public var statusCode: Int = 0
     public var headers = HTTPClientEntity()
     
