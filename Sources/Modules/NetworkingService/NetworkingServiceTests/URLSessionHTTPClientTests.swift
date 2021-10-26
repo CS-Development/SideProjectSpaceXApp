@@ -27,6 +27,25 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private func resultFor(data: Data?,
+                           response: URLResponse?,
+                           error: Error?, file: StaticString = #filePath,
+                           line: UInt = #line) -> HTTPClientResult {
+        URLProtocolStub.stub(data: data, response: response, error: error)
+        let url = anyURL()
+        let sut = makeSUT(file: file, line: line)
+        var receivedResult: HTTPClientResult!
+        let exp = expectation(description: "wait for completion")
+        
+        sut.makeRequest(toURL: url, withHttpMethod: .get) { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        return receivedResult
+    }
+    
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         trackForMemoryLeaks(sut, file: file, line: line)
