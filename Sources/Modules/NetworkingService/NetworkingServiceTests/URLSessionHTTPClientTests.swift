@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NetworkingService
 
 /// We test the functionalities of the URLSessionHTTPClient in Isolation, that means we want also to test the client independently from the Network
 /// Aka without to make any real network request. To achieve this purpose we are going to stub the URLProtocol. Stubbing means that the stub object will answer with the hardcoded data we'll provide to it, either successful data or failure errors, and we will verifiy that the SUT (system under test) reacts in the desired way, spying/intercepting the methods of the URLProtocol.
@@ -25,6 +26,24 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     
     // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
+        let sut = URLSessionHTTPClient()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
+
+    private func anyData() -> Data {
+        return Data("any data".utf8)
+    }
+
+    private func anyNonHTTPURLResponse() -> URLResponse {
+        return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+    }
+
+    private func anyHTTPURLResponse() -> HTTPURLResponse {
+        return HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+    }
 
     private class URLProtocolStub: URLProtocol {
         
